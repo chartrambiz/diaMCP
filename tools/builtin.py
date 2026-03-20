@@ -13,23 +13,38 @@ from base import tool
 
 
 DANGEROUS_PATTERNS = [
-    r"rm\s+-rf\s+/",  # rm -rf /
-    r"rm\s+-rf\s+\*",  # rm -rf *
-    r"rm\s+-rf\s+\.",  # rm -rf .
-    r"dd\s+.*of=/dev/sd",  # dd to disk device
-    r"dd\s+.*of=/dev/hd",  # dd to disk device
-    r"dd\s+.*of=/dev/null",  # dd to null (data loss)
-    r"mkfs",  # filesystem creation
-    r"shutdown",  # shutdown
-    r"reboot",  # reboot
-    r"halt",  # halt
-    r"poweroff",  # poweroff
-    r"init\s+0",  # init 0 (halt)
-    r"chmod\s+-R\s+777",  # chmod -R 777
-    r"chmod\s+777",  # chmod 777
-    r"curl.*\|.*sh",  # curl | sh (drive-by install)
-    r"wget.*\|.*sh",  # wget | sh
-    r":\(\)\{",  # Fork bomb
+    (r"\brm\s+-rf\s+/\s", "rm -rf / with trailing path"),
+    (r"\brm\s+-rf\s+\*\s", "rm -rf * with trailing space"),
+    (r"\brm\s+-rf\s+\.\s", "rm -rf . with trailing space"),
+    (r"\brm\s+-rf\s+/", "rm -rf /"),
+    (r"\brm\s+-rf\s+\*", "rm -rf *"),
+    (r"\brm\s+-rf\s+\.", "rm -rf ."),
+    (r"\brm\s+-rf\s", "rm -rf with any path"),
+    (r"\brm\s+-r\s+/\s", "rm -r / with trailing path"),
+    (r"\brm\s+-r\s+\*\s", "rm -r * with trailing space"),
+    (r"\brm\s+-r\s+\.\s", "rm -r . with trailing space"),
+    (r"\brm\s+-r\s+/\s", "rm -r / with trailing path"),
+    (r"\brm\s+-r\s+\*", "rm -r *"),
+    (r"\brm\s+-r\s+\.", "rm -r ."),
+    (r"\brm\s+-r\s", "rm -r with any path"),
+    (r"\bdd\s+.*of=/dev/sd", "dd to disk device"),
+    (r"\bdd\s+.*of=/dev/hd", "dd to disk device"),
+    (r"\bdd\s+.*of=/dev/null", "dd to null (data loss)"),
+    (r"\bdd\s+.*of=/", "dd to root device"),
+    (r"\bmkfs", "filesystem creation"),
+    (r"\bshutdown", "shutdown command"),
+    (r"\breboot", "reboot command"),
+    (r"\bhalt", "halt command"),
+    (r"\bpoweroff", "poweroff command"),
+    (r"\binit\s+0", "init 0 (halt)"),
+    (r"\bchmod\s+-R\s+777", "chmod -R 777"),
+    (r"\bchmod\s+777", "chmod 777 (wide open)"),
+    (r"\bcurl.*\|.*sh", "curl piped to shell"),
+    (r"\bwget.*\|.*sh", "wget piped to shell"),
+    (r":\(\)\{", "fork bomb"),
+    (r">\s*/etc/passwd", "writing to passwd"),
+    (r">\s*/etc/shadow", "writing to shadow"),
+    (r"\.\/.*\s*>", "redirecting output to file"),
 ]
 
 
@@ -45,11 +60,15 @@ blacklisted_commands: set[str] = set()
 def is_command_dangerous(command: str) -> tuple[bool, str]:
     """Check if command matches dangerous patterns."""
     cmd_lower = command.lower()
-    for pattern in DANGEROUS_PATTERNS:
+    for pattern, description in DANGEROUS_PATTERNS:
         if re.search(pattern, cmd_lower, re.IGNORECASE):
-            return True, f"Command matches dangerous pattern: {pattern}"
+            return True, f"Dangerous command: {description}"
     if command.strip() in blacklisted_commands:
         return True, "Command is blacklisted"
+
+    if ".." in command and not command.strip().startswith("/workspace"):
+        return True, "Path traversal detected"
+
     return False, ""
 
 
@@ -230,9 +249,9 @@ async def run_command(command: str, timeout: int = 30, ctx=None) -> str:
                     if result.data and result.data.remember:
                         approve_command(command)
             except Exception:
-                return f"[BLOCKED] Command matches dangerous pattern: {reason}"
+                return f"[BLOCKED] {reason}"
         else:
-            return f"[BLOCKED] Command matches dangerous pattern: {reason}"
+            return f"[BLOCKED] {reason}"
 
     try:
         result = subprocess.run(
