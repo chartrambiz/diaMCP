@@ -87,6 +87,28 @@ The MCP will immediately be available with all tools.
 | `add_numbers` | Add two numbers |
 | `word_reverser` | Reverse words in a sentence |
 
+## MCP Resources
+
+Resources expose context data that the LLM can read on demand:
+
+| Resource | Description |
+|----------|-------------|
+| `diamcp://context/time` | Current date and time |
+| `diamcp://context/system` | System information |
+| `diamcp://workspace/summary` | Workspace contents overview |
+| `diamcp://tools/list` | List of all available tools |
+
+## MCP Prompts
+
+Reusable prompt templates for common workflows:
+
+| Prompt | Description |
+|--------|-------------|
+| `startup_context` | Call get_time and get_system_info first |
+| `file_search_first` | Use search_files before reading files |
+| `web_research` | Web search then fetch workflow |
+| `code_review` | Steps for reviewing code |
+
 ## Adding Custom Tools
 
 Create a Python file in `./workspace/tools/`:

@@ -41,6 +41,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Session approval tracking** - `manage_approved` tool to list/clear approved commands
 - **Dangerous patterns info** - `get_dangerous_patterns` tool shows all blocked patterns
 - **Elicitation support** - Confirmation prompts for dangerous commands (works with MCP clients that support it)
+- **MCP Resources** - Expose context to LLM:
+  - `diamcp://context/time` - current datetime
+  - `diamcp://context/system` - system information
+  - `diamcp://workspace/summary` - workspace contents overview
+  - `diamcp://tools/list` - list of all available tools
+- **MCP Prompts** - Reusable prompt templates:
+  - `startup_context` - call get_time and get_system_info first
+  - `file_search_first` - use search_files before reading files
+  - `web_research` - web_search then web_fetch workflow
+  - `code_review` - steps for reviewing code
+- **Additional built-in tools**: `count_lines`, `download_file`, `file_info`, `create_directory`, `delete_file`, `run_python_script`
 
 ### Known Issues
 - Custom tools may require LLM to refresh tool list on first load
