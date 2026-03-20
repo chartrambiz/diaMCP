@@ -106,7 +106,8 @@ def web_research() -> str:
         "1. Use web_search to find relevant pages\n"
         "2. Use web_fetch to extract content from promising URLs\n"
         "3. Use calculate for any math needed\n"
-        "4. Summarize findings for the user"
+        "4. Summarize findings for the user\n"
+        "5. Format beautifully, use markdown, cite sources with links"
     )
 
 
