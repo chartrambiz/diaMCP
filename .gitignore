@@ -50,10 +50,8 @@ htmlcov/
 # Docker
 .dockerignore
 
-# Workspace (keep directory but ignore content)
-workspace/*
-!workspace/.gitkeep
-!workspace/tools/.gitkeep
+# Workspace (user custom tools persist here)
+workspace/
 
 # Logs
 *.log

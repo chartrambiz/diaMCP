@@ -15,14 +15,15 @@ logger = logging.getLogger("diamcp")
 WORKSPACE_DIR = Path("/workspace")
 WORKSPACE_TOOLS_DIR = WORKSPACE_DIR / "tools"
 APP_DIR = Path("/app")
-APP_TOOLS_EXAMPLES_DIR = APP_DIR / "examples"
+APP_TOOLS_DIR = APP_DIR / "tools"
+APP_TOOLS_EXAMPLES_DIR = APP_TOOLS_DIR / "examples"
 
 sys.path.insert(0, str(APP_DIR))
 sys.path.insert(0, str(WORKSPACE_DIR))
 sys.path.insert(0, str(WORKSPACE_TOOLS_DIR))
 
-from base import ToolRegistry
-from builtin import register_builtin_tools
+from tools.base import ToolRegistry
+from tools.builtin import register_builtin_tools
 
 mcp = FastMCP(
     "do-it-all-mcp",
@@ -147,9 +148,9 @@ def discover_tools_from_dir(tools_dir: Path, source_name: str):
 
 
 def discover_user_tools():
-    """Discover and load Python tools from workspace and examples directories."""
+    """Discover and load Python tools from tools/ and workspace directories."""
+    discover_tools_from_dir(APP_TOOLS_DIR, "tools")
     discover_tools_from_dir(WORKSPACE_TOOLS_DIR, "workspace/tools")
-    discover_tools_from_dir(APP_TOOLS_EXAMPLES_DIR, "tools/examples")
 
 
 def register_tools():

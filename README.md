@@ -220,17 +220,32 @@ The workspace volume persists your files and custom tools across restarts.
 ```
 diamcp/
 ├── server.py          # Main MCP server (FastMCP)
-├── base.py            # Tool decorator & registry
-├── builtin.py         # Built-in tools (14 core tools)
+├── base.py            # Tool decorator & registry (copy to /app/tools/)
+├── builtin.py         # Built-in tools (copy to /app/tools/)
+├── tools/             # Internal diaMCP tools (copied to /app/tools/)
+│   ├── examples/      # Reference examples - copy to workspace/tools/ to use
+│   │   ├── useful_tools.py
+│   │   ├── weather_tool.py
+│   │   └── example_tools.py
 ├── install.sh         # One-line install/update script
 ├── restart.sh         # Rebuild and restart script
 ├── config/            # Configuration
 ├── Dockerfile
 ├── docker-compose.yml
 ├── requirements.txt
-└── workspace/         # Persistent volume
-    └── tools/         # Custom tools directory
+└── workspace/         # Persistent volume (mounted at /workspace)
+    └── tools/         # Your custom tools go here
 ```
+
+## Tool Locations
+
+| Location | Purpose | Persists? |
+|----------|---------|-----------|
+| `tools/` | Built-in diaMCP tools | No - internal to container |
+| `tools/examples/` | Reference examples | No - copy to workspace to use |
+| `workspace/tools/` | Your custom tools | Yes - survives updates |
+
+To use an example tool, copy it from `tools/examples/` to `workspace/tools/`, then run `./restart.sh`.
 
 ## Requirements
 
