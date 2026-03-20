@@ -27,8 +27,10 @@ The MCP will immediately be available with all tools.
 
 ## Features
 
-- **17 Built-in Tools**: File operations, web search, git, shell, code execution, and more
-- **Dynamic Tool Discovery**: Drop Python files into `./workspace/tools/` to add custom tools
+- **20+ Built-in Tools**: File operations, web search, git, shell, code execution, and more
+- **Dangerous Command Blocking**: `run_command` blocks dangerous patterns (rm -rf, dd, mkfs, etc.)
+- **Elicitation Support**: Confirmation prompts for risky commands (works with MCP clients that support it)
+- **Dynamic Tool Discovery**: Drop Python files into `./workspace/tools/` or use built-in examples
 - **HTTP Transport**: No stdio, no extra config - just a URL
 - **Persistent Workspace**: Files and tools survive container restarts
 - **Works with llama-server webui**: Designed for the MCP integration built into llama.cpp webui
@@ -43,13 +45,16 @@ The MCP will immediately be available with all tools.
 | `list_directory` | List directory contents |
 | `search_files` | Find files by glob pattern |
 | `grep` | Search for patterns in files |
+| `file_info` | Get file metadata (size, dates, permissions) |
+| `delete_file` | Delete a file (with safety checks) |
+| `create_directory` | Create directories |
 
 ### Web & Research
 | Tool | Description |
 |------|-------------|
 | `web_search` | Search the web (DuckDuckGo) |
 | `web_fetch` | Extract text from web pages |
-| `calculate` | Mathematical expressions |
+| `download_file` | Download a file from URL to workspace |
 
 ### Git Operations
 | Tool | Description |
@@ -60,10 +65,20 @@ The MCP will immediately be available with all tools.
 ### System & Code
 | Tool | Description |
 |------|-------------|
-| `run_command` | Execute shell commands |
+| `run_command` | Execute shell commands (with dangerous pattern blocking) |
 | `python_eval` | Run Python snippets |
+| `run_python_script` | Execute Python script files |
 | `get_system_info` | System information |
 | `get_time` | Current date/time |
+| `calculate` | Mathematical expressions |
+| `count_lines` | Count lines of code by file type |
+
+### Security Management
+| Tool | Description |
+|------|-------------|
+| `manage_blacklist` | Add/remove commands from blacklist |
+| `manage_approved` | List/clear approved commands |
+| `get_dangerous_patterns` | Show blocked dangerous patterns |
 
 ### Custom Tools (./workspace/tools/)
 | Tool | Description |

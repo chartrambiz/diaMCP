@@ -13,6 +13,7 @@ logger = logging.getLogger("diamcp")
 WORKSPACE_DIR = Path("/workspace")
 WORKSPACE_TOOLS_DIR = WORKSPACE_DIR / "tools"
 APP_DIR = Path("/app")
+APP_TOOLS_EXAMPLES_DIR = APP_DIR / "examples"
 
 sys.path.insert(0, str(APP_DIR))
 sys.path.insert(0, str(WORKSPACE_DIR))
@@ -30,16 +31,12 @@ mcp = FastMCP(
 )
 
 
-def discover_user_tools():
-    """Discover and load Python tools from the workspace tools directory."""
-    if not WORKSPACE_TOOLS_DIR.exists():
-        logger.info(
-            f"Tools directory {WORKSPACE_TOOLS_DIR} does not exist, creating..."
-        )
-        WORKSPACE_TOOLS_DIR.mkdir(parents=True, exist_ok=True)
+def discover_tools_from_dir(tools_dir: Path, source_name: str):
+    """Discover and load Python tools from a directory."""
+    if not tools_dir.exists():
         return
 
-    for filepath in WORKSPACE_TOOLS_DIR.glob("*.py"):
+    for filepath in tools_dir.glob("*.py"):
         if filepath.name.startswith("_"):
             continue
 
@@ -51,9 +48,15 @@ def discover_user_tools():
                 module = importlib.util.module_from_spec(spec)
                 sys.modules[filepath.stem] = module
                 spec.loader.exec_module(module)
-                logger.info(f"Loaded tools from {filepath.name}")
+                logger.info(f"Loaded tools from {source_name}/{filepath.name}")
         except Exception as e:
-            logger.error(f"Failed to load {filepath.name}: {e}")
+            logger.error(f"Failed to load {source_name}/{filepath.name}: {e}")
+
+
+def discover_user_tools():
+    """Discover and load Python tools from workspace and examples directories."""
+    discover_tools_from_dir(WORKSPACE_TOOLS_DIR, "workspace/tools")
+    discover_tools_from_dir(APP_TOOLS_EXAMPLES_DIR, "tools/examples")
 
 
 def register_tools():
