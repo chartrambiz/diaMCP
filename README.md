@@ -10,25 +10,66 @@ When using llama-server's webui, you want tools without complexity. No servers t
 2. Add the MCP URL to your webui
 3. Done.
 
-## Quick Start
+## Installation
+
+### Option 1: Quick Install (Recommended)
+
+One command to install or update:
 
 ```bash
-# Clone or download the project
-cd diamcp
-
-# Start the MCP server container
-docker compose up --build -d
-
-# Start llama-server with MCP proxy enabled
-llama-server --webui-mcp-proxy -m model.gguf -c 32768 --host 0.0.0.0 --port 8080
-
-# In the llama.cpp webui:
-# 1. Go to MCP Settings
-# 2. Toggle "Enable llama-server proxy" ON
-# 3. Add the MCP URL: http://<your-ip>:8000/mcp
+curl -fsSL https://raw.githubusercontent.com/chartrambiz/diaMCP/main/install.sh | sh
 ```
 
+The script will:
+- Check Docker and Docker Compose are installed
+- Clone the repo if not present
+- Build and start the container
+- Show next steps
+
+To update an existing installation, run the same command from within the diaMCP directory.
+
+### Option 2: Git Clone
+
+```bash
+# Clone the repository
+git clone https://github.com/chartrambiz/diaMCP.git
+cd diaMCP
+
+# Start the container
+docker compose up --build -d
+```
+
+To update later:
+```bash
+git pull origin main 2>/dev/null || git pull origin master
+docker compose up --build -d
+```
+
+## Post-Installation Setup
+
+After starting the MCP server container:
+
+1. Start llama-server with MCP proxy enabled:
+```bash
+llama-server --webui-mcp-proxy -m model.gguf -c 32768 --host 0.0.0.0 --port 8080
+```
+
+2. In the llama.cpp webui:
+   - Go to MCP Settings
+   - Toggle **"Enable llama-server proxy"** ON
+   - Add the MCP URL: `http://localhost:8000/mcp`
+
 The MCP tools will be available in your chat.
+
+## Updating
+
+After modifying custom tools or pulling new changes, rebuild and restart:
+
+```bash
+./restart.sh
+```
+
+This script rebuilds the container and verifies it's running.
 
 ## Demo
 
@@ -148,7 +189,7 @@ def my_tool(input: str) -> str:
 
 Restart the container to load new tools:
 ```bash
-docker compose restart
+./restart.sh
 ```
 
 ## Configuration
@@ -179,14 +220,16 @@ The workspace volume persists your files and custom tools across restarts.
 ```
 diamcp/
 ├── server.py          # Main MCP server (FastMCP)
-├── base.py           # Tool decorator & registry
-├── builtin.py        # Built-in tools (14 core tools)
-├── config/           # Configuration
+├── base.py            # Tool decorator & registry
+├── builtin.py         # Built-in tools (14 core tools)
+├── install.sh         # One-line install/update script
+├── restart.sh         # Rebuild and restart script
+├── config/            # Configuration
 ├── Dockerfile
 ├── docker-compose.yml
 ├── requirements.txt
-└── workspace/        # Persistent volume
-    └── tools/        # Custom tools directory
+└── workspace/         # Persistent volume
+    └── tools/         # Custom tools directory
 ```
 
 ## Requirements
