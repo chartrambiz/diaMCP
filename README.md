@@ -25,6 +25,16 @@ docker compose up --build -d
 
 The MCP will immediately be available with all tools.
 
+## Demo
+
+See diaMCP in action with the llama.cpp webui:
+
+### File Operations
+![File Operations Demo](./media/demo-1.gif)
+
+### Web Search & Research
+![Web Search Demo](./media/demo-2.gif)
+
 ## Features
 
 - **20+ Built-in Tools**: File operations, web search, git, shell, code execution, and more
