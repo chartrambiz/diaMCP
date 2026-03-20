@@ -2,6 +2,8 @@ services:
   diamcp:
     container_name: diamcp
     build: .
+    # Run as current user so workspace files are owned by you
+    user: "1000:1000"
     volumes:
       - ./workspace:/workspace
     ports:

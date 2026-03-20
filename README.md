@@ -61,6 +61,8 @@ llama-server --webui-mcp-proxy -m model.gguf -c 32768 --host 0.0.0.0 --port 8080
 
 The MCP tools will be available in your chat.
 
+**Note:** Files created in the `workspace/` directory are owned by your user (UID 1000). If you need a different UID, edit `docker-compose.yml` and change the `user:` value.
+
 ## Updating
 
 After modifying custom tools or pulling new changes, rebuild and restart:
