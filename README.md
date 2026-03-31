@@ -14,10 +14,14 @@ When using llama-server's webui, you want tools without complexity. No servers t
 
 ### Option 1: Quick Install (Recommended)
 
-One command to install or update:
-
+#### Linux / macOS
 ```bash
 curl -fsSL https://raw.githubusercontent.com/chartrambiz/diaMCP/main/install.sh | sh
+```
+
+#### Windows
+```powershell
+irm https://raw.githubusercontent.com/chartrambiz/diaMCP/main/install.ps1 | iex
 ```
 
 The script will:
@@ -30,7 +34,18 @@ To update an existing installation, run the same command from within the diaMCP 
 
 ### Option 2: Git Clone
 
+#### Linux / macOS
 ```bash
+# Clone the repository
+git clone https://github.com/chartrambiz/diaMCP.git
+cd diaMCP
+
+# Start the container
+docker compose up --build -d
+```
+
+#### Windows (PowerShell)
+```powershell
 # Clone the repository
 git clone https://github.com/chartrambiz/diaMCP.git
 cd diaMCP
@@ -44,6 +59,30 @@ To update later:
 git pull origin main 2>/dev/null || git pull origin master
 docker compose up --build -d
 ```
+
+## Windows Setup Requirements
+
+If using Windows, you need:
+
+1. **Docker Desktop for Windows**
+   - Download from https://docker.com/products/docker-desktop
+   - Requires Windows 10/11 Pro, Enterprise, or Education
+   - Enable WSL2 backend during installation
+
+2. **WSL2 (Windows Subsystem for Linux)**
+   - Open PowerShell as Administrator and run:
+     ```powershell
+     wsl --install
+     ```
+   - Restart your computer when prompted
+   - Ubuntu is recommended as your Linux distribution
+
+3. **After WSL2 setup**
+   - Open Ubuntu (or your chosen distro) from the Start menu
+   - Run the installation commands above from within WSL2
+   - All Linux/bash commands in this README will work as-is
+
+**Note**: Running diaMCP directly in Windows Command Prompt or PowerShell (without WSL2) is not supported - the install scripts and container are designed for Linux environments.
 
 ## Post-Installation Setup
 
@@ -236,7 +275,8 @@ diamcp/
 │   │   ├── useful_tools.py
 │   │   ├── weather_tool.py
 │   │   └── example_tools.py
-├── install.sh         # One-line install/update script
+├── install.sh         # One-line install/update script (Linux/macOS)
+├── install.ps1        # One-line install/update script (Windows)
 ├── restart.sh         # Rebuild and restart script
 ├── config/            # Configuration
 ├── Dockerfile
