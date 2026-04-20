@@ -96,7 +96,7 @@ llama-server --webui-mcp-proxy -m model.gguf -c 32768 --host 0.0.0.0 --port 8080
 2. In the llama.cpp webui:
    - Go to MCP Settings
    - Toggle **"Enable llama-server proxy"** ON
-   - Add the MCP URL: `http://localhost:8000/mcp`
+   - Add the MCP URL: `http://127.0.0.1:8000/mcp`
 
 The MCP tools will be available in your chat.
 
